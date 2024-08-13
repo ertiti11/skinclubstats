@@ -37,7 +37,7 @@ const MyComponent = () => {
                         key={cas.id}
                         file={cas.file}
                         name={cas.name}
-                        price={cas.price}
+                        casePrice={cas.price}
                       />
                     );
                   })}

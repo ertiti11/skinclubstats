@@ -1,9 +1,24 @@
 import sqlite3
 import requests
+import time
+
+
+def deleteAllTables():
+    conn = sqlite3.connect('./skin.db')
+    c = conn.cursor()
+    c.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    tables = c.fetchall()
+    for table in tables:
+        c.execute(f'DROP TABLE "{table[0]}"')
+    conn.commit()
+    conn.close()
+
+deleteAllTables()
+
 def getCase(caseName):
     URL = "https://gate.skin.club/apiv2/cases/"+caseName
     data = requests.get(URL)
-    return data.json()
+    return data.json()["data"]
 
 def get_main_sections():
     url = 'https://gate.skin.club/api/main-sections?page=1&per-page=100'
@@ -30,17 +45,20 @@ def get_main_sections():
     response = requests.get(url, headers=headers)
     return (response.json()["data"])
 
-
-
-
-
-
-def createDB():
+def deleteCaseNameTable():
     conn = sqlite3.connect('./skin.db')
     c = conn.cursor()
-    c.execute("CREATE TABLE caseNAmes (name TEXT)")
+    c.execute("DROP TABLE IF EXISTS caseNames")
+    conn.commit()
+    conn.close()
+
+def createDB():
+    deleteCaseNameTable()
+    conn = sqlite3.connect('./skin.db')
+    c = conn.cursor()
+    c.execute("CREATE TABLE IF NOT EXISTS caseNames (name TEXT)")
     for case in caseNames:
-        c.execute("INSERT INTO caseNAmes (name) VALUES (?)", (case,))
+        c.execute("INSERT INTO caseNames (name) VALUES (?)", (case,))
     conn.commit()
     conn.close()
 
@@ -51,11 +69,34 @@ for type in allcases:
     for case in type["cases"]:
         caseNames.append(case["name"])
     
-createDB()
+
 
 
 
 def caseData2DB(caseName):
     conn = sqlite3.connect('./skin.db')
     c = conn.cursor()
-    c.execute("CREATE TABLE cases (name TEXT,, price REAL, id INTEGER)")
+    c.execute(f'CREATE TABLE IF NOT EXISTS "{caseName}" (name TEXT, caseWeapons TEXT, price REAL)')
+    c.execute(f'CREATE TABLE IF NOT EXISTS "{caseName}Weapons" (id INTEGER PRIMARY KEY, name TEXT, price REAL, rarity TEXT, image TEXT, finish TEXT, chance REAL)')
+    data = getCase(caseName)
+    
+    for weapon in data["last_successful_generation"]["contents"]:
+        image = weapon["item"]["file"]["path"]
+        if image is not None:
+            c.execute(f'INSERT INTO "{caseName}Weapons" (name, price, rarity, image, finish, chance) VALUES (?,?,?,?,?,?)', 
+                      (weapon["item"]["market_hash_name"], weapon["fixed_price"], weapon["item"]["rarity_site"], image, weapon["item"]["finish"], weapon["chance_percent"]))
+            conn.commit()
+        else:
+            print(f"Advertencia: La clave 'image' no se encontró en el arma {weapon['item']['market_hash_name']}")
+    
+    conn.close()
+
+createDB()
+print(len(caseNames))
+print("insertando armas en la base de datos...")
+started = time.time()
+for case in caseNames:
+    caseData2DB(case)
+
+print(f"Proceso terminado en {time.time()-started} segundos")
+

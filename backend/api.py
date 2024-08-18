@@ -1,8 +1,11 @@
-from flask import Flask, jsonify, send_file
+from flask import Flask, jsonify, send_file, Response
 import requests
 from flask_cors import CORS
 from io import BytesIO
 import sqlite3
+import json
+import gzip
+from utils import getAllCaseNames, getCases
 app = Flask(__name__)
 CORS(app)
 
@@ -59,6 +62,22 @@ def getCase(caseName):
 
     return jsonify(data)
 
+@app.route("/api/cases", methods=['GET'])
+def createMainJson():
+    cases = getAllCaseNames()
+    data = {}
+
+    for case in cases:
+        data[case] = getCases(case)
+        
+    json_data = json.dumps(data)
+    compressed_data = gzip.compress(json_data.encode('utf-8'))
+    
+    response = Response(compressed_data, content_type='application/json')
+    response.headers['Content-Encoding'] = 'gzip'
+    response.headers['Content-Length'] = len(compressed_data)
+    
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)

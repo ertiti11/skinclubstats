@@ -75,11 +75,6 @@ export default function CaseComponent({ file, name, casePrice }) {
   // Calcular realPrice
   var realPrice = casePriceNum - minSkinPrice;
 
-  // Calcular el beneficio esperado de cada tipo
-  var expectedProfit = (profitChance / 100) * (realPrice - casePriceNum);
-  var expectedOneFiveProfit = (oneFiveChance / 100) * (casePriceNum * 1.5 - casePriceNum);
-  var expectedDoubleProfit = (doubleChance / 100) * (casePriceNum * 2 - casePriceNum);
-  var expectedTripleProfit = (tripeChance / 100) * (casePriceNum * 3 - casePriceNum);
 
   // Calcular el ratio beneficio/riesgo usando EV
 

@@ -76,9 +76,11 @@ for type in allcases:
 def caseData2DB(caseName):
     conn = sqlite3.connect('./skin.db')
     c = conn.cursor()
-    c.execute(f'CREATE TABLE IF NOT EXISTS "{caseName}" (name TEXT, caseWeapons TEXT, price REAL)')
+    c.execute(f'CREATE TABLE IF NOT EXISTS "{caseName}" (price REAL)')
     c.execute(f'CREATE TABLE IF NOT EXISTS "{caseName}Weapons" (id INTEGER PRIMARY KEY, name TEXT, price REAL, rarity TEXT, image TEXT, finish TEXT, chance REAL)')
     data = getCase(caseName)
+
+    c.execute(f'INSERT INTO "{caseName}" (price) VALUES (?)', (data["price"],))
     
     for weapon in data["last_successful_generation"]["contents"]:
         image = weapon["item"]["file"]["path"]
@@ -99,4 +101,10 @@ for case in caseNames:
     caseData2DB(case)
 
 print(f"Proceso terminado en {time.time()-started} segundos")
+
+
+
+
+
+
 

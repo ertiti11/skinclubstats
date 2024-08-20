@@ -65,12 +65,12 @@ def getCase(caseName):
 @app.route("/api/main", methods=['GET'])
 def createMainJson():
     cases = getAllCaseNames()
-    data = {}
-
+    arr = []
     for case in cases:
-        data[case] = getCases(case)
+        case_data = getCases(case)
+        arr.append({case: case_data})
         
-    json_data = json.dumps(data)
+    json_data = json.dumps(arr)
     compressed_data = gzip.compress(json_data.encode('utf-8'))
     
     response = Response(compressed_data, content_type='application/json')

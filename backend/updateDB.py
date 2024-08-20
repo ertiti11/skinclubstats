@@ -76,7 +76,7 @@ for type in allcases:
 def caseData2DB(caseName):
     conn = sqlite3.connect('./skin.db')
     c = conn.cursor()
-    c.execute(f'CREATE TABLE IF NOT EXISTS "{caseName}" (price REAL, profit_chance REAL, profit_chanceX1dot5 REAL, profit_chanceX2 REAL, profit_chanceX3 REAL, profit_chanceX10 REAL, real_price REAL, ev REAL, irb REAL)')
+    c.execute(f'CREATE TABLE IF NOT EXISTS "{caseName}" (price REAL, profit_chance REAL, profit_chanceX1dot5 REAL, profit_chanceX2 REAL, profit_chanceX3 REAL, profit_chanceX10 REAL, real_price REAL, ev REAL, irb REAL, image TEXT)')
     c.execute(f'CREATE TABLE IF NOT EXISTS "{caseName}Weapons" (id INTEGER PRIMARY KEY, name TEXT, price REAL, rarity TEXT, image TEXT, finish TEXT, chance REAL)')
     data = getCase(caseName)
 

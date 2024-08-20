@@ -62,7 +62,7 @@ def getCase(caseName):
 
     return jsonify(data)
 
-@app.route("/api/cases", methods=['GET'])
+@app.route("/api/main", methods=['GET'])
 def createMainJson():
     cases = getAllCaseNames()
     data = {}
@@ -78,6 +78,5 @@ def createMainJson():
     response.headers['Content-Length'] = len(compressed_data)
     
     return response
-
 if __name__ == '__main__':
     app.run(debug=True)

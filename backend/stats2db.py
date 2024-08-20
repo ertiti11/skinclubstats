@@ -113,6 +113,7 @@ def calculate_IRB(data):
 
 def getAllStatFromCase(caseName):
     case = getCase(caseName)
+    image = case[1]["image"]
     profit = profit_chance(case)
     profit1dot5 = profit_chanceX1dot5(case)
     profit2 = profit_chanceX2(case)
@@ -124,7 +125,7 @@ def getAllStatFromCase(caseName):
     
     conn = sqlite3.connect("./skin.db")
     c = conn.cursor()
-    c.execute(f'UPDATE "{caseName}" SET profit_chance = ?, profit_chanceX1dot5 = ?, profit_chanceX2 = ?, profit_chanceX3 = ?, profit_chanceX10 = ?, real_price = ?, ev = ?, irb = ?', (profit, profit1dot5, profit2, profit3, profit10, minprice, ev, irb))
+    c.execute(f'UPDATE "{caseName}" SET profit_chance = ?, profit_chanceX1dot5 = ?, profit_chanceX2 = ?, profit_chanceX3 = ?, profit_chanceX10 = ?, real_price = ?, ev = ?, irb = ?, image = ?', (profit, profit1dot5, profit2, profit3, profit10, minprice, ev, irb, image))
     conn.commit()
     conn.close()
 

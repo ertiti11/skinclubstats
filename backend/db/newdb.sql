@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS "skins" (
 	"rarity" TEXT,
 	"price" REAL,
 	"image_url" TEXT,
+	"state" TEXT,
 	"created_at" TIMESTAMP,
 	PRIMARY KEY("skin_id")
 );
@@ -13,6 +14,16 @@ CREATE TABLE IF NOT EXISTS "cases" (
 	"case_id" INTEGER NOT NULL UNIQUE,
 	"case_name" TEXT,
 	"price" REAL,
+	"profit_chance" REAL,
+	"image_url" TEXT,
+	"profit_chanceX1dot5" REAL,
+	"profit_chanceX2" REAL,
+	"profit_chanceX3" REAL,
+	"profit_chanceX10" REAL,
+	"real_price" REAL,
+	"ev" REAL,
+	"irb" REAL,
+	"created_at" TIMESTAMP,
 	PRIMARY KEY("case_id")
 );
 
